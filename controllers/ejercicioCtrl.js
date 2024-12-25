@@ -31,6 +31,33 @@ const CrearEjercicio = async (req, res) => {
     }
 };
 
+
+// Agregar peso
+const agregarPeso = async (req, res) => {
+    try {
+        const ejercicio = await Ejercicio.findById(req.params.id);
+        if (!ejercicio) {
+            return res.status(404).json({ message: 'Ejercicio no encontrado' });
+        }
+
+        // Obtener el peso y la fecha desde el cuerpo de la solicitud
+        const { peso, fecha } = req.body;
+
+        // Si no se proporciona una fecha, usar la fecha actual
+        const fechaActual = fecha || new Date();
+
+        // Agregar el nuevo peso al historial
+        ejercicio.historialPesos.push({ peso, fecha: fechaActual });
+
+        await ejercicio.save();
+        res.status(200).json(ejercicio);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al agregar el peso', error });
+    }
+};
+
+
 module.exports = {
-    CrearEjercicio
+    CrearEjercicio,
+    agregarPeso
 };
