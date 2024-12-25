@@ -1,26 +1,30 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
-const UsuarioSchema = Schema({
-  nombre: {
-    type: String,
-    required: [true, "Este dato es obligatorio!"],
-  },
-  correo: {
-    type: String,
-    required: [true, "Este dato es obligatorio!"],
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: [true, "Este dato es obligatorio!"],
-  }
-});
+const UsuarioSchema = Schema ({
+    nombre: {
+        type: String,
+        required: [true, "Este dato es obligatorio."]
+    },
+    correo: {
+        type: String,
+        required: [true, "Este dato es obligatorio."],
+        unique: true,
+    }, 
+    password: {
+        type: String,
+        required: [true, "Este dato es obligatorio."],
+    },
+    avatarUrl: { 
+        type: String, 
+        default: "" 
+    },
+})
 
 //Quitar datos de la respuesta
 UsuarioSchema.methods.toJSON = function () {
-  const { password, __v, ...usuario } = this.toObject();
+    const { password, __v, ...usuario } = this.toObject();
+  
+    return usuario;
+  };
 
-  return usuario;
-};
-
-module.exports = model("Usuario", UsuarioSchema);
+  module.exports = model("Usuario", UsuarioSchema);
