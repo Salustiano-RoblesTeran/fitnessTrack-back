@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const EjercicioSchema = Schema ({
+const EjercicioSchema = Schema({
     nombreEjercicio: {
         type: String,
         required: [true, "Este dato es obligatorio."]
@@ -27,12 +27,23 @@ const EjercicioSchema = Schema ({
         max: 30,
         required: [true, "Este dato es obligatorio."]
     },
-    peso: { 
-        type: Number, 
-        required: true,
-        min: 1, 
-        max: 500 
-    },
-    fecha: { type: Date, default: Date.now },
-    usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true }
-})
+    historialPesos: [{
+        peso: { 
+            type: Number, 
+            required: true,
+            min: 1, 
+            max: 500 
+        },
+        fecha: { 
+            type: Date, 
+            default: Date.now 
+        }
+    }],
+    usuarioId: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Usuario', 
+        required: true 
+    }
+});
+
+module.exports = model("Ejercicio", EjercicioSchema);
