@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const express = require('express');
-const { CrearEjercicio, agregarPeso, actualizar, obtenerEjercicio } = require('../controllers/ejercicioCtrl')
+const { CrearEjercicio, agregarPeso, actualizar, obtenerEjercicio, obtenerEjerciciosPorDia } = require('../controllers/ejercicioCtrl')
+const { validarJWT } = require("../middlewares/validar_jwt");
 
 const router = Router();
 
@@ -13,5 +14,8 @@ router.post('/:id/agregar-peso', agregarPeso);
 router.post('/:id/actualizar', actualizar);
 
 router.get('/:id', obtenerEjercicio);
+
+router.get('/:id/ejercicios', 
+    obtenerEjerciciosPorDia);
 
 module.exports = router;

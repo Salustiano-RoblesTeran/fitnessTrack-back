@@ -111,9 +111,40 @@ const obtenerEjercicio = async (req, res) => {
 };
 
 
+const obtenerEjerciciosPorDia = async (req, res) => {
+    const { dia } = req.query; // Obtener el parámetro 'dia' desde la URL
+
+    if (!dia) {
+        return res.status(400).json({ message: 'Día no especificado' });
+    }
+
+    try {
+        // Obtener todos los ejercicios
+        const ejercicios = await Ejercicio.find();
+
+        // Filtrar los ejercicios que coinciden con el día
+        const ejerciciosFiltrados = ejercicios.filter(ejercicio => ejercicio.dia === dia);
+
+        if (ejerciciosFiltrados.length === 0) {
+            return res.status(404).json({ message: `No se encontraron ejercicios para el día ${dia}` });
+        }
+
+        // Enviar los ejercicios filtrados
+        res.json(ejerciciosFiltrados);
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los ejercicios', error });
+    }
+};
+
+
+
+
+
 module.exports = {
     CrearEjercicio,
     agregarPeso,
     actualizar,
-    obtenerEjercicio
+    obtenerEjercicio,
+    obtenerEjerciciosPorDia
 };
