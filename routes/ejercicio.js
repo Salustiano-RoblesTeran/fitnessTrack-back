@@ -15,7 +15,8 @@ router.post('/:id/actualizar', actualizar);
 
 router.get('/:id', obtenerEjercicio);
 
-router.get('/:id/ejercicios', 
+router.get('/',
+    validarJWT, 
     obtenerEjerciciosPorDia);
 
 module.exports = router;

@@ -112,31 +112,28 @@ const obtenerEjercicio = async (req, res) => {
 
 
 const obtenerEjerciciosPorDia = async (req, res) => {
-    const { dia } = req.query; // Obtener el parámetro 'dia' desde la URL
+    const { dia } = req.query;  // Obtener el parámetro 'dia' de la consulta
+    const { id } = req.usuario;  // Obtener el ID del usuario desde la URL
 
     if (!dia) {
         return res.status(400).json({ message: 'Día no especificado' });
     }
 
     try {
-        // Obtener todos los ejercicios
-        const ejercicios = await Ejercicio.find();
+        // Obtener los ejercicios filtrados por usuarioId y dia
+        const ejercicios = await Ejercicio.find({ usuarioId: id, dia });
 
-        // Filtrar los ejercicios que coinciden con el día
-        const ejerciciosFiltrados = ejercicios.filter(ejercicio => ejercicio.dia === dia);
-
-        if (ejerciciosFiltrados.length === 0) {
-            return res.status(404).json({ message: `No se encontraron ejercicios para el día ${dia}` });
+        if (ejercicios.length === 0) {
+            return res.status(404).json({ message: `No se encontraron ejercicios para el día ${dia} para el usuario con ID ${id}` });
         }
 
-        // Enviar los ejercicios filtrados
-        res.json(ejerciciosFiltrados);
+        // Enviar los ejercicios encontrados
+        res.json(ejercicios);
         
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los ejercicios', error });
     }
 };
-
 
 
 

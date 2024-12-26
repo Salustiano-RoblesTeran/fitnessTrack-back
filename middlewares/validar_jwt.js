@@ -22,12 +22,6 @@ const validarJWT = async (req = request, res = response, next) => {
       });
     }
 
-    if (!usuario.estado) {
-      return res.status(401).json({
-        msg: "Usuario inactivo!",
-      });
-    }
-
     req.usuario = usuario;
 
     next();
