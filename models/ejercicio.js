@@ -30,6 +30,7 @@ const EjercicioSchema = Schema({
     historialPesos: [{
         peso: { 
             type: Number, 
+            default: 0,
             required: true,
             min: 1, 
             max: 500 

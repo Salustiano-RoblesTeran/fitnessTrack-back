@@ -57,7 +57,63 @@ const agregarPeso = async (req, res) => {
 };
 
 
+const actualizar = async (req, res) => {
+    try {
+    const { id } = req.params;
+    const { nombreEjercicio, grupoMusculares, dia, series, repeticiones, peso } = req.body;
+
+    const ejercicio = await Ejercicio.findById(id);
+    if (!ejercicio) {
+        return res.status(404).json({ message: 'Ejercicio no encontrado' });
+    }
+
+    // Actualizar los campos del ejercicio
+    
+
+    ejercicio.nombreEjercicio = nombreEjercicio;
+    ejercicio.grupoMusculares = grupoMusculares;
+    ejercicio.dia = dia;
+    ejercicio.series = series;
+    ejercicio.repeticiones = repeticiones;
+    ejercicio.historialPesos[0].peso = peso;
+
+    await ejercicio.save();
+
+    // **IMPORTANTE: Enviar respuesta al cliente**
+    res.json({
+        message: 'Ejercicio actualizado correctamente',
+        ejercicio
+    });
+
+} catch (error) {
+    res.status(500).json({ message: 'Hubo un error al actualizar el ejercicio', error });
+}
+}
+
+
+const obtenerEjercicio = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Buscar el ejercicio por ID
+        const ejercicio = await Ejercicio.findById(id);
+        
+        if (!ejercicio) {
+            return res.status(404).json({ message: 'Ejercicio no encontrado' });
+        }
+
+        // Enviar el ejercicio encontrado
+        res.json(ejercicio);
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el ejercicio', error });
+    }
+};
+
+
 module.exports = {
     CrearEjercicio,
-    agregarPeso
+    agregarPeso,
+    actualizar,
+    obtenerEjercicio
 };
