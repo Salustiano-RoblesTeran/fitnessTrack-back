@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { agregarCiclismo, agregarCorrer } = require('../controllers/actividadCtrl')
+const { agregarCiclismo, agregarCorrer, obtenerCiclismo, obtenerCorrer } = require('../controllers/actividadCtrl')
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar_campos');
 const { validarJWT } = require('../middlewares/validar_jwt');
@@ -31,5 +31,11 @@ router.post(
     ],
     agregarCorrer
 );
+
+// Ruta para obtener registros de ciclismo
+router.get('/ciclismo', validarJWT, obtenerCiclismo);
+
+// Ruta para obtener registros de correr
+router.get('/correr', validarJWT, obtenerCorrer);
 
 module.exports = router;
