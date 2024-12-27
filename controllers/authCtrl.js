@@ -81,8 +81,28 @@ const login = async (req = request, res = response) => {
     }
   };
   
+
+  const obtenerUsuario = async (req, res) => {
+    try {
+        const uid = req.usuario;  // El uid viene del middleware validarJWT
+
+        // Buscar al usuario y seleccionar solo nombre y avatarUrl
+        const usuario = await Usuario.findById(uid).select('nombre avatarUrl');
+
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json(usuario);  // Devolver solo nombre y avatarUrl
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ message: 'Error en el servidor' });
+    }
+};
+
   module.exports = {
     login,
-    register
+    register,
+    obtenerUsuario
   };
   

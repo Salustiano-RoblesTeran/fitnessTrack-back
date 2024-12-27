@@ -11,9 +11,13 @@ router.post('/crear',
     CrearEjercicio);
 
 // Ruta para agregar peso al historial de un ejercicio
-router.post('/:id/agregar-peso', agregarPeso);
+router.post('/:id/agregar-peso',
+    validarJWT,
+    agregarPeso);
 
-router.post('/:id/actualizar', actualizar);
+router.post('/:id/actualizar',
+    validarJWT,
+    actualizar);
 
 router.get('/:id',
     validarJWT,
@@ -24,6 +28,7 @@ router.get('/',
     obtenerEjerciciosPorDia);
 
 router.post('/:id/eliminar',
+    validarJWT,
     eliminarEjercicio
 )
 
