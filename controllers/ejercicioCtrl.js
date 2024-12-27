@@ -4,7 +4,8 @@ const Usuario = require('../models/usuario');
 // Crear nuevo ejercicio
 const CrearEjercicio = async (req, res) => {
     try {
-        const { nombreEjercicio, grupoMusculares, dia, series, repeticiones, peso, usuarioId } = req.body;
+        const { id:usuarioId } = req.usuario; 
+        const { nombreEjercicio, grupoMusculares, dia, series, repeticiones, peso } = req.body;
 
         // Verificar si el usuario existe
         const usuario = await Usuario.findById(usuarioId);
@@ -112,8 +113,8 @@ const obtenerEjercicio = async (req, res) => {
 
 
 const obtenerEjerciciosPorDia = async (req, res) => {
-    const { dia } = req.query;  // Obtener el parámetro 'dia' de la consulta
-    const { id } = req.usuario;  // Obtener el ID del usuario desde la URL
+    const { dia } = req.query; 
+    const { id } = req.usuario; 
 
     if (!dia) {
         return res.status(400).json({ message: 'Día no especificado' });
@@ -135,6 +136,23 @@ const obtenerEjerciciosPorDia = async (req, res) => {
     }
 };
 
+const eliminarEjercicio = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const ejercicio = await Ejercicio.findById(id);
+
+        if (!ejercicio) {
+            return res.status(404).json({message: 'Ejercicio no encontrado'})
+        }
+
+        await ejercicio.deleteOne();
+        res.status(200).json({message: 'Ejercicio eliminado correctamente.' })
+    } catch (error) {
+        res.status(500).json({message: 'Error al eliminar el ejercicio', error: error.message})
+    }
+
+}
+
 
 
 
@@ -143,5 +161,6 @@ module.exports = {
     agregarPeso,
     actualizar,
     obtenerEjercicio,
-    obtenerEjerciciosPorDia
+    obtenerEjerciciosPorDia,
+    eliminarEjercicio
 };
