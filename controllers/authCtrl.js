@@ -100,7 +100,7 @@ const login = async (req = request, res = response) => {
     }
 };
 
-  module.exports = {
+module.exports = {
     login,
     register,
     obtenerUsuario

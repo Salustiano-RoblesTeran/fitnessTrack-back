@@ -19,6 +19,7 @@ class Server {
     // Login
     this.authPath = "/api/auth";
     this.ejercicioPath = "/api/ejercicio";
+    this.actividadPath = "/api/actividad";
 
     // DB
     this.conectarDB();
@@ -49,6 +50,7 @@ class Server {
   routes() {
     this.app.use(this.authPath, require("../routes/auth"));
     this.app.use(this.ejercicioPath, require("../routes/ejercicio"))
+    this.app.use(this.actividadPath, require("../routes/actividad"))
   }
 
 
