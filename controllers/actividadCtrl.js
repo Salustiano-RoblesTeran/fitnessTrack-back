@@ -1,5 +1,6 @@
 const { response, request } = require("express");
 const { Ciclismo, Correr } =  require("../models/actividad");
+const dayjs = require('dayjs');
 
 // Controlador para agregar un registro de "Ciclismo"
 const agregarCiclismo = async (req = request, res = response) => {
@@ -9,7 +10,7 @@ const agregarCiclismo = async (req = request, res = response) => {
         const registroCiclismo = new Ciclismo({
             distancia,
             minutos,
-            fecha,
+            fecha: dayjs(fecha).format('YYYY-MM-DD'), // Formatear la fecha antes de guardar
             usuario: req.usuario.id // ID del usuario autenticado
         });
 
@@ -37,6 +38,7 @@ const agregarCorrer = async (req = request, res = response) => {
         const registroCorrer = new Correr({
             distancia,
             minutos,
+            fecha: dayjs(fecha).format('YYYY-MM-DD'), // Formatear la fecha antes de guardar
             usuario: req.usuario.id // ID del usuario autenticado
         });
 
@@ -56,7 +58,6 @@ const agregarCorrer = async (req = request, res = response) => {
     }
 };
 
-
 // Controlador para obtener registros de "Ciclismo"
 const obtenerCiclismo = async (req, res) => {
     try {
@@ -65,9 +66,15 @@ const obtenerCiclismo = async (req, res) => {
         // Obtener registros de ciclismo para el usuario autenticado
         const registrosCiclismo = await Ciclismo.find({ usuario: usuarioId }).sort({ fecha: -1 });
 
+        // Formatear las fechas al enviar la respuesta
+        const registrosCiclismoFormateados = registrosCiclismo.map(registro => ({
+            ...registro.toObject(),
+            fecha: dayjs(registro.fecha).format('YYYY-MM-DD')
+        }));
+
         res.status(200).json({
             ok: true,
-            registros: registrosCiclismo
+            registros: registrosCiclismoFormateados
         });
     } catch (error) {
         console.error(error);
@@ -86,9 +93,15 @@ const obtenerCorrer = async (req, res) => {
         // Obtener registros de correr para el usuario autenticado
         const registrosCorrer = await Correr.find({ usuario: usuarioId }).sort({ fecha: -1 });
 
+        // Formatear las fechas al enviar la respuesta
+        const registrosCorrerFormateados = registrosCorrer.map(registro => ({
+            ...registro.toObject(),
+            fecha: dayjs(registro.fecha).format('YYYY-MM-DD')
+        }));
+
         res.status(200).json({
             ok: true,
-            registros: registrosCorrer
+            registros: registrosCorrerFormateados
         });
     } catch (error) {
         console.error(error);
@@ -99,13 +112,9 @@ const obtenerCorrer = async (req, res) => {
     }
 };
 
-
-
-
 module.exports = {
     agregarCiclismo,
     agregarCorrer,
     obtenerCiclismo,
     obtenerCorrer
-  };
-  
+};

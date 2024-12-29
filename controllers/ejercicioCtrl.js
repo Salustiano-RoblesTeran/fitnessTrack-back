@@ -1,11 +1,13 @@
 const Ejercicio = require('../models/ejercicio');
 const Usuario = require('../models/usuario');
+const dayjs = require('dayjs');
 
 // Crear nuevo ejercicio
 const CrearEjercicio = async (req, res) => {
     try {
         const { id:usuarioId } = req.usuario; 
         const { nombreEjercicio, grupoMusculares, dia, series, repeticiones, peso } = req.body;
+
 
         // Verificar si el usuario existe
         const usuario = await Usuario.findById(usuarioId);
@@ -20,7 +22,7 @@ const CrearEjercicio = async (req, res) => {
             dia,
             series,
             repeticiones,
-            historialPesos: [{ peso, fecha: new Date() }],  // Se agrega el primer peso al historial
+            historialPesos: [{ peso, fecha: dayjs().format('YYYY-MM-DD')}],  // Se agrega el primer peso al historial
             usuarioId
         });
 
@@ -45,7 +47,8 @@ const agregarPeso = async (req, res) => {
         const { peso, fecha } = req.body;
 
         // Si no se proporciona una fecha, usar la fecha actual
-        const fechaActual = fecha || new Date();
+        const fechaActual = fecha ? dayjs(fecha).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+
 
         // Agregar el nuevo peso al historial
         ejercicio.historialPesos.push({ peso, fecha: fechaActual });
@@ -80,7 +83,6 @@ const actualizar = async (req, res) => {
 
     await ejercicio.save();
 
-    // **IMPORTANTE: Enviar respuesta al cliente**
     res.json({
         message: 'Ejercicio actualizado correctamente',
         ejercicio
