@@ -139,8 +139,10 @@ const obtenerEjerciciosPorDia = async (req, res) => {
 };
 
 const eliminarEjercicio = async (req, res) => {
-    const { id } = req.params;
     try {
+
+        const { id } = req.params;
+
         const ejercicio = await Ejercicio.findById(id);
 
         if (!ejercicio) {
